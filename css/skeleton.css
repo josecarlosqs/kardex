@@ -24,7 +24,11 @@
 - Clearing
 - Media Queries
 */
+/*Extras*/
 
+.row,.columns,html,body{
+  height: auto;
+}
 
 /* Grid
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
@@ -49,12 +53,16 @@
 }
 
 /* For devices larger than 550px */
-@media (min-width: 550px) {
+/*@media (min-width: 550px) {*/
+@media (min-width: 860px) {
+  html,body,.columns,.row{
+    height: 100%;
+  }
   .container {
     width: 80%; }
   .column,
-  .columns {
-    margin-left: 4%; }
+  /*.columns { margin-left: 4%; }*/
+  .columns { margin-left: 4%; }
   .column:first-child,
   .columns:first-child {
     margin-left: 0; }
@@ -68,7 +76,8 @@
   .six.columns                    { width: 48%;            }
   .seven.columns                  { width: 56.6666666667%; }
   .eight.columns                  { width: 65.3333333333%; }
-  .nine.columns                   { width: 74.0%;          }
+  /*.nine.columns                   { width: 74.0%;          }*/
+  .nine.columns                   { width: 78.0%;margin-left: 0%}
   .ten.columns                    { width: 82.6666666667%; }
   .eleven.columns                 { width: 91.3333333333%; }
   .twelve.columns                 { width: 100%; margin-left: 0; }
@@ -361,6 +370,7 @@ form {
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
 .u-full-width {
   width: 100%;
+  min-width: 1000px;
   box-sizing: border-box; }
 .u-max-full-width {
   max-width: 100%;

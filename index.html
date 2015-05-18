@@ -4,21 +4,41 @@
 	<meta charset="utf-8">
 	<title>Kardex</title>
 	<link rel="stylesheet" type="text/css" href="css/normalize.css">
-	<link rel="stylesheet" type="text/css" href="css/skeleton.css">
+	<!--link rel="stylesheet" type="text/css" href="css/skeleton.css"-->
 	<link rel="stylesheet" type="text/css" href="css/principal.css">
 	<link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
 	<link rel="stylesheet" type="text/css" href="css/sweetalert.css">
-	<script type="text/javascript" src="js/sweetalert.min.js"></script>
 </head>
 <body>
-  <div class="row">
-    <table class="u-full-width">
+  <div class="contenedor">
+  <div class="divDescripcion">
+  	<!--h1>Kardex</h1>
+	<h4>Mercancia:</h4>
+	<h4>Producto:</h4>
+	<h4>Metodo:</h4>
+	<h4>Responsable:</h4-->
+	<form id="formu">
+		<input type="text" name="fecha">
+		<input type="text" name="comprobante">
+		<select name="tipoEspecie">
+			<option value="entrada">entrada</option>
+			<option value="salida">salida</option>
+		</select>
+		<input type="text" name="cantidad">
+		<input type="text" name="compra">
+		<input type="submit">
+	</form>
+  </div>
+  <div class="divKardex">
+    <table id="tablaKardex">
 		<colgroup></colgroup>
 		<colgroup></colgroup>
 		<colgroup></colgroup>
 		<colgroup span="3"></colgroup>
 		<colgroup span="2"></colgroup>
 		<colgroup span="3"></colgroup>
+		<colgroup id="ultimo"></colgroup>
+		<thead>
 		<tr>
 			<th rowspan="2">Fecha</th>
 			<th rowspan="2">Compr. Nº</th>
@@ -26,6 +46,7 @@
 			<th colspan="3">Especie</th>
 			<th colspan="2">Precio unitario</th>
 			<th colspan="3">Valores</th>
+			<th rowspan="2" class="colUsr"><i class="fa fa-user"></i></th>
 		</tr>
 		<tr>
 			<th>Entradas</th>
@@ -37,22 +58,18 @@
 			<th>Haber</th>
 			<th>Saldos</th>
 		</tr>
+		</thead>
 		<!-- Aqui comienza contenido -->
-		<tr>
-		  <td></td>
-		  <td></td>
-		  <td></td>
-		  <td></td>
-		  <td></td>
-		  <td></td>
-		  <td></td>
-		  <td></td>
-		  <td></td>
-		  <td></td>
-		  <td></td>
-		</tr>
+		<tbody id="tablaKardex">
+		
+		</tbody>
 	</table>
+	</div>
   </div>
 
+
+<script src="js/jquery-1.11.2.min.js"></script>
+<script type="text/javascript" src="js/sweetalert.min.js"></script>
+<script type="text/javascript" src="js/principal.js"></script>
 </body>
 </html>
