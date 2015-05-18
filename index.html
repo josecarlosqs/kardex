@@ -1,28 +1,68 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title></title>
+	<meta charset="utf-8">
+	<title>Kardex</title>
 	<link rel="stylesheet" type="text/css" href="css/normalize.css">
 	<link rel="stylesheet" type="text/css" href="css/skeleton.css">
+	<link rel="stylesheet" type="text/css" href="css/principal.css">
 </head>
 <body>
 
 <!-- .container is main centered wrapper -->
-<div class="container">
+<!--div class="container"-->
 
   <!-- columns should be the immediate child of a .row -->
   <div class="row">
-    <div class="one column">One</div>
-    <div class="eleven columns">Eleven</div>
+    <table class="u-full-width">
+		<colgroup></colgroup>
+		<colgroup></colgroup>
+		<colgroup></colgroup>
+		<colgroup span="3"></colgroup>
+		<colgroup span="2"></colgroup>
+		<colgroup span="3"></colgroup>
+		<tr>
+			<th rowspan="2">Fecha</th>
+			<th rowspan="2">Compr. Nº</th>
+			<th rowspan="2">Prov. / Client.</th>
+			<th colspan="3">Especie</th>
+			<th colspan="2">Precio unitario</th>
+			<th colspan="3">Valores</th>
+		</tr>
+		<tr>
+			<th>Entradas</th>
+			<th>Salidas</th>
+			<th>Existencia</th>
+			<th>Compra</th>
+			<th>Salida</th>
+			<th>Debe</th>
+			<th>Haber</th>
+			<th>Saldos</th>
+		</tr>
+		<!-- Aqui comienza contenido -->
+		<tr>
+		  <td>P</td>
+		  <td>O</td>
+		  <td>14</td>
+		  <td>06</td>
+		  <td>1978</td>
+		  <td>1978</td>
+		  <td>06</td>
+		  <td>1978</td>
+		  <td>1978</td>
+		  <td>06</td>
+		  <td>1978</td>
+		</tr>
+	</table>
   </div>
 
-  <!-- just use a number and class 'column' or 'columns' -->
+  <!-- just use a number and class 'column' or 'columns' 
   <div class="row">
     <div class="two columns">Two</div>
     <div class="ten columns">Ten</div>
   </div>
 
-  <!-- there are a few shorthand columns widths as well -->
+  <!-- there are a few shorthand columns widths as well 
   <div class="row">
     <div class="one-third column">1/3</div>
     <div class="two-thirds column">2/3</div>
@@ -30,9 +70,9 @@
   <div class="row">
     <div class="one-half column">1/2</div>
     <div class="one-half column">1/2</div>
-  </div>
+  </div>-->
 
-</div>
+<!--/div-->
 
 </body>
 </html>

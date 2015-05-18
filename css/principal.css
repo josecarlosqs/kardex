@@ -1,0 +1,14 @@
+th,td{
+	text-align: center;
+}
+th{
+	background-color: #34495e;
+	color: #fff;
+}
+td:hover{
+	background-color: #ecf0f1;
+}
+colgroup{
+	border-left: 1px #bdc3c7 dashed;
+	border-right: 1px #bdc3c7 dashed;
+}
