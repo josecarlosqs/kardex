@@ -1,8 +1,7 @@
 var datos = [],
 	cant = 0
 	n_decimales = -1,
-	metodo = ''
-	tablaKardex = $("tbody");
+	metodo = '';
 
 var decimales = function(decimales, numero){
 	factor = Math.pow(10,decimales);
@@ -11,11 +10,8 @@ var decimales = function(decimales, numero){
 
 var existenciasTotales = function(){
 	var total = 0;
-
-
 	if(datos.length > 1){
-		for(n in datos){
-		
+		for(n in datos){		
 			if(typeof datos[n].entrada !== "undefined"){
 				total += datos[n].entrada;
 			}else{
@@ -23,12 +19,10 @@ var existenciasTotales = function(){
 			}
 		}
 	}
-
 	return parseFloat(total);
 }
 
 var saldoTotal = function(){
-	console.log(datos.length);
 	var total = 0;
 	if(datos.length > 0){
 	
@@ -195,21 +189,19 @@ var generarHTML = function(){
 				);
 		}
 	}
-	tablaKardex.html(codigoHTML)
-
-		
+	document.getElementById("tablaKardex").innerHTML = codigoHTML;
 }
 
-$("#formu").submit(function(e){
-	e.preventDefault();
-	var o = $(this).serializeArray(),
-	n = "";
-	n += "{";
-	o.forEach(function(x){
-		n+= "\""+x.name+"\"" +":\""+ x.value+"\",";
-	});
-	n = n.substring(0, n.length-1)
-	n+="}";
-	agregar(JSON.parse(n));
+//Listeners
+document.getElementById("formu").onsubmit = function(e){
+	var dataSrc = e.srcElement, formuDat = "{";
+	formuDat += "\""+dataSrc[0].name+"\""+":"+"\""+dataSrc[0].value+"\""+",";
+	formuDat += "\""+dataSrc[1].name+"\""+":"+"\""+dataSrc[1].value+"\""+",";
+	formuDat += "\""+dataSrc[2].name+"\""+":"+"\""+dataSrc[2].value+"\""+",";
+	formuDat += "\""+dataSrc[3].name+"\""+":"+"\""+dataSrc[3].value+"\""+",";
+	formuDat += "\""+dataSrc[4].name+"\""+":"+"\""+dataSrc[4].value+"\"";
+	formuDat += "}";
+	agregar(JSON.parse(formuDat));
 	generarHTML();
-});
+	return false;
+}

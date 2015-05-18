@@ -5,12 +5,12 @@
 	<title>Kardex</title>
 	<link rel="stylesheet" type="text/css" href="css/normalize.css">
 	<link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
-	<link rel="stylesheet" type="text/css" href="css/sweetalert.css">
 	<link rel="stylesheet" type="text/css" href="css/principal.css">
 </head>
 <body>
 <div id="general">
-	<div id="contenedor">
+	<a href="#" id="msj"></a>
+	<div id="contenedor">		
 		<div class="pantalla">
 			<div class="fix">
 				<form id="formu">
@@ -27,7 +27,7 @@
 			</div>
 		</div>
 		<div class="pantalla">
-			<table id="tablaKardex">
+			<table>
 				<colgroup></colgroup>
 				<colgroup></colgroup>
 				<colgroup></colgroup>
@@ -65,8 +65,15 @@
 	</div>
 </div>
 
-<script src="js/jquery-1.11.2.min.js"></script>
-<script type="text/javascript" src="js/sweetalert.min.js"></script>
 <script type="text/javascript" src="js/principal.js"></script>
+<!--
+
+	if(actual === 0){
+				document.getElementById("msj").innerHTML = "<span><i class=\"fa fa-chevron-left\"></i>&nbsp;Arrastrar para ir al Kardex&nbsp;<i class=\"fa fa-chevron-left\"></i></span>";
+			}else{
+				document.getElementById("msj").innerHTML = "<span><i class=\"fa fa-chevron-right\"></i>&nbsp;Arrastrar para ir al formulario&nbsp;<i class=\"fa fa-chevron-right\"></i></span>";
+			}
+
+		-->
 </body>
 </html>
