@@ -2,32 +2,72 @@
 <html>
 <head>
 	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>Kardex</title>
 	<link rel="stylesheet" type="text/css" href="css/normalize.css">
+	<link rel="stylesheet" type="text/css" href="css/sweetalert.css">
 	<link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
 	<link rel="stylesheet" type="text/css" href="css/principal.css">
 </head>
-<body>
-<a href="#" id="msj">&nbsp;</a>
+<body onresize="dimensionarDivContenido()">
+<div id="creditos">~ Proyecto final de Contabilidad General - 33C - 2015 ~</div>
 <div id="general">
 	<div id="contenedor">		
-		<div class="pantalla" id="p0">
-			<div class="fix">
-				<form>
-					<div class="inputFormulario"><input type="text" name="fecha"></div>
-					<div class="inputFormulario"><input type="text" name="comprobante"></div>
-					<div class="inputFormulario"><select name="tipoEspecie">
-						<option value="entrada">entrada</option>
-						<option value="salida">salida</option>
-					</select></div>
-					<div class="inputFormulario"><input type="text" name="cantidad"></div>
-					<div class="inputFormulario"><input type="text" name="compra"></div>
-					<div class="inputFormulario"><input type="submit"></div>
-				</form>
+		<div class="pantalla">
+			<div class="tituloPantalla">
+			<button onclick="inicializar(true)" class="boton" id="izquierda">
+				<i class="fa fa-cog"></i>&nbsp;Reconfigurar
+			</button>
+			Formulario de operaciones
+			<button onclick="cambiarPantalla()" class="boton" id="derecha">
+				Ver Kardex&nbsp;<i class="fa fa-caret-right"></i>
+			</button>
+			</div>
+			<div class="contenido">
+				<div class="fix">
+					<form>
+						<div class="inputFormulario">
+							<label for="fecha">Fecha de la operación:</label>
+							<input type="text" name="fecha" id="fecha" placeholder="DD/MM/AA">
+						</div>
+						<div class="inputFormulario">
+							<label for="tipoEspecie">Tipo de operación:</label>
+							<select name="tipoEspecie" id="tipoEspecie">
+								<option value="" class="txtCentro">~ Seleccionar ~</option>
+								<option value="entrada" class="txtCentro">Entrada</option>
+								<option value="salida" class="txtCentro">Salida</option>
+							</select>
+						</div>
+						<div class="inputFormulario">
+							<label for="cantidad">Cantidad:</label>
+							<input type="text" name="cantidad" id="cantidad" placeholder="Cantidad">
+						</div>
+						<div class="inputFormulario">
+							<label for="compra">Valor de compra:</label>
+							<input type="text" name="compra" id="compra" placeholder="Compra en S/.">
+						</div>
+						<div class="inputFormulario">
+							<label for="comprobante">Código del comprobante:</label>
+							<input type="text" name="comprobante" id="comprobante" placeholder="[Opcional]">
+						</div>
+						<br>
+						<div class="inputFormulario"><input type="submit" class="btnVerdeGrande" value="~ Registrar operación ~"></div>
+					</form>
+				</div>
 			</div>
 		</div>
-		<div class="pantalla" id="p1">
-			<table>
+		<div class="pantalla">
+			<div class="tituloPantalla">
+				<button onclick="cambiarPantalla()" class="boton" id="izquierda">
+					<i class="fa fa-caret-left"></i>&nbsp;Ir a formulario
+				</button>
+				Kardex
+				<button onclick="verDatos()" class="boton" id="derecha">
+					<i class="fa fa-list"></i>&nbsp;Ver datos del Kardex
+				</button>
+			</div>
+			<div class="contenido">
+				<table id="tablaKardex">
 				<colgroup></colgroup>
 				<colgroup></colgroup>
 				<colgroup></colgroup>
@@ -57,10 +97,44 @@
 				</tr>
 				</thead>
 				<!-- Aqui comienza contenido -->
-				<tbody id="tablaKardex">
+				<tbody id="contenidoKardex">
+				<tr><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>gcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td></tr>
+				<tr><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>gcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td></tr>
+				<tr><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>gcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td></tr>
+				<tr><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>gcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td></tr>
+				<tr><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>gcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td></tr>
+				<tr><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>gcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td></tr>
+				<tr><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>gcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td></tr>
+				<tr><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>gcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td></tr>
+				<tr><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>gcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td></tr>
+				<tr><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>gcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td></tr>
+				<tr><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>gcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td></tr>
+				<tr><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>gcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td></tr>
+				<tr><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>gcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td></tr>
+				<tr><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>gcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td></tr>
+				<tr><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>gcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td></tr>
+				<tr><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>gcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td></tr>
+				<tr><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>gcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td></tr>
+				<tr><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>gcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td></tr>
+				<tr><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>gcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td></tr>
+				<tr><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>gcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td></tr>
+				<tr><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>gcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td></tr>
+				<tr><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>gcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td></tr>
+				<tr><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>gcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td></tr>
+				<tr><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>gcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td></tr>
+				<tr><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>gcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td></tr>
+				<tr><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>gcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td></tr>
+				<tr><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>gcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td></tr>
+				<tr><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>gcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td></tr>
+				<tr><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>gcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td></tr>
+				<tr><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>gcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td></tr>
+				<tr><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>gcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td></tr>
+				<tr><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>gcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td></tr>
+				<tr><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>gcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ugcfioy</td><td>ultimo</td></tr>
 				
 				</tbody>
 			</table>
+			</div>		
 		</div>
 	</div>
 </div>
@@ -68,19 +142,24 @@
 <div id="modal">
 	<div id="contenedorModal">
 		<form id="datosIniciales">
-			<div class="inputFormulario"><input type="text" name="responsable" autofocus></div>
-			<div class="inputFormulario"><select name="metodo">
-				<option value="">~ Ninguno ~</option>
+			<h3 class="subrayado txtCentro">Configuración del Kardex</h3>
+			<div class="inputFormulario"><label for="empresa">Empresa:</label><input type="text" id="empresa" name="empresa" autofocus required placeholder="Empresa a analizar"></div>
+			<div class="inputFormulario"><label for="responsable">Persona responsable:</label><input type="text" id="responsable" name="responsable" required placeholder="Responsable del Kardex"></div>
+			<div class="inputFormulario"><label for="metodo">Metodo a usar:</label><select id="metodo" name="metodo" required>
+				<option value="">~ Metodo a usar ~</option>
 				<option value="peps">PEPS</option>
 				<option value="ueps">UEPS</option>
 				<option value="pp">PP</option>
 
 			</select></div>
-			<div class="inputFormulario"><input type="text" name="decimales" value="2"></div>
-			<div class="inputFormulario"><input type="submit"></div>
+			<div class="inputFormulario"><label for="decimales">Cant. de decimales:</label><input type="text" id="decimales" name="decimales" placeholder="Decimales a usar (Def: 2)"></div>
+			<br>
+			<div class="inputFormulario"><input type="submit" value="Terminado!" class="btnVerdeGrande"></div>
 		</form>
 	</div>
 </div>
+<script type="text/javascript" src="js/hammer.min.js"></script>
+<script type="text/javascript" src="js/sweetalert.min.js"></script>
 <script type="text/javascript" src="js/velocity.min.js"></script>
 <script type="text/javascript" src="js/principal.js"></script>
 

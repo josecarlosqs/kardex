@@ -1,4 +1,4 @@
-
+/*
 
 var decimales = function(decimales, numero){
 	factor = Math.pow(10,decimales);
@@ -202,3 +202,4 @@ document.getElementById("formu").onsubmit = function(e){
 	generarHTML();
 	return false;
 }
+*/

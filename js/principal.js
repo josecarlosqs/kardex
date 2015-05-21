@@ -1,58 +1,116 @@
+//Variables globales
 var pantallaActual = 0,
-	pantallas = document.getElementsByClassName('pantalla'),
+	datosKardex = [],
+	configuracion = {},
+	reconfigurar = false;
+
+//Objetos
+var pantallas = document.getElementsByClassName('pantalla'),
 	general = document.getElementById("general"),
 	contenedor = document.getElementById("contenedor"),
 	modal = document.getElementById("modal"),
-	datosKardex = [],
-	cantRegistros = 0
-	n_decimales = -1,
-	metodo = '',
-	responsable = '';
+	contenido = document.getElementsByClassName("contenido"),
+	eventosMobile = new Hammer(general);
 
-var inicializar = function(silente){
-	Velocity(modal, "fadeIn", {duration: 200});
-}
-
-document.getElementById("msj").innerHTML = "<span><i class=\"fa fa-chevron-right\"></i>&nbsp;Ir al Kardex&nbsp;<i class=\"fa fa-chevron-right\"></i></span>";
-
-document.getElementById('msj').addEventListener('click', function(e){
-         if(pantallaActual == 0){
+//Funciones
+var dimensionarDivContenido = function(callback){
+		var callback = callback || function(){};
+		for(i in contenido){
+			if(typeof contenido[i] === "object"){
+				contenido[i].style.height = (document.body.clientHeight-100)+"px";
+			}
+		}
+		callback();
+	},
+	cantidadItemsObjeto = function(obj){
+		cant = 0;
+		for(n in obj){
+			cant++;
+		}
+		return cant;
+	},
+	inicializar = function(reconf){
+		reconf = reconf || false;
+		this.reconfigurar = reconf;
+		Velocity(modal, "fadeIn", {duration: 10});
+	},
+	cambiarPantalla=function(){
+		if(pantallaActual == 0){
 			pantallaActual = 1;
-			Velocity(contenedor, {left: -1*pantallas[pantallaActual].offsetLeft}, {duration: 400});
-			document.getElementById("msj").innerHTML = "<span><i class=\"fa fa-chevron-left\"></i>&nbsp;Ir al formulario de operaciones&nbsp;<i class=\"fa fa-chevron-left\"></i></span>";
+			Velocity(contenedor, {left: -1*pantallas[pantallaActual].offsetLeft}, {duration: 500, easing: "easeOutQuint"});
 		}else{
 			pantallaActual = 0;
-			Velocity(contenedor, {left: pantallas[pantallaActual].offsetLeft}, {duration: 400 });
-			document.getElementById("msj").innerHTML = "<span><i class=\"fa fa-chevron-right\"></i>&nbsp;Ir al Kardex&nbsp;<i class=\"fa fa-chevron-right\"></i></span>";
+			Velocity(contenedor, {left: pantallas[pantallaActual].offsetLeft}, {duration: 500, easing: "easeOutQuint" });
 		}
-        e.preventDefault();
-  });
-general.onmousemove = function(){
-	//console.log('f');
-}
+	},
+	verDatos = function(){
+		swal({
+			title: "Datos:",
+			text: "<strong class=\"textoSWAL\">Empresa:</strong><p class=\"textoSWAL\">"+configuracion.empresa+"</p><strong class=\"textoSWAL\">Responsable:</strong><p class=\"textoSWAL\">"+configuracion.responsable+"</p><strong class=\"textoSWAL\">Metodo:</strong><p class=\"textoSWAL\">"+configuracion.metodo.toUpperCase()+"</p>",
+			html: true,
+			customClass: "sweetExtra"
+		});
+	},
+	validar = {
+		fecha: function(fecha){
+			var regex =  /(0[1-9]|[12][0-9]|3[01])[- /.](0[1-9]|1[012])[- /.](19|20)\d\d/;
+			return regex.test(fecha);
+		},
+		entero: function(num){
+			var regex = /[0-9]+/;
+			return regex.test(num);
+		},
+		flotante: function(){
+			var regex = /[0-9]+/;
+			return regex.test(num);
+		}
+	};
+
 
 //Listeners
 document.getElementById("datosIniciales").onsubmit = function(e){
 	e.preventDefault();
-	var dataSrc = e.target;
-
-	 responsable = dataSrc[0].value;
-	 metodo = dataSrc[1].value;
-	 n_decimales = parseInt(dataSrc[2].value);
-	
-	if(n_decimales === -1 || metodo === '' || responsable === ''){
-		return false;
-	}else{
-		Velocity(modal, "fadeOut", {duration: 200, complete: function(){
-			console.log(responsable);
-			console.log(metodo);
-			console.log(n_decimales);
+	var dataSrc = e.target,
+		empresa = dataSrc[0].value,
+		responsable = dataSrc[1].value,
+		metodo = dataSrc[2].value;
+		n_decimales = parseInt(dataSrc[3].value) || 2
+ 	
+ 	configuracion.empresa = empresa;
+ 	configuracion.responsable = responsable;
+ 	configuracion.metodo = metodo;
+ 	configuracion.decimales = n_decimales;
+	dimensionarDivContenido(function(){
+		Velocity(modal, "fadeOut", {duration: 200, complete:function(){
+			if(reconfigurar === true){
+				swal({title: "Exito", text:"Kardex reconfigurado!",type:"success",timer: 1500});
+			}else{
+				swal({title: "Exito", text:"Kardex configurado!\nPuedes empezar a llenarlo",type:"success",timer: 1500});
+			}
 		}});
-	}	
+	});
 }
 
 
+modal.addEventListener("click", function(e){
+	if(e.target.id === "modal" && reconfigurar === true){
+		Velocity(modal, "fadeOut", {duration: 200});
+	}
+});
+document.addEventListener("keydown", function(e){
+	if(e.keyCode === 27 && reconfigurar === true){
+		Velocity(modal, "fadeOut", {duration: 200});
+	}
+});
 
-if(n_decimales === -1 || metodo === '' || responsable === ''){
-	inicializar();
-}
+eventosMobile.on('swipe', function(ev) {
+    if(ev.pointerType !== "mouse"){
+    	if((pantallaActual === 0 && ev.direction === 2) ||(pantallaActual === 1 && ev.direction === 4)){
+    		cambiarPantalla();	
+    	}
+    	
+    }
+});
+
+//Funciones a ejecutar
+inicializar();
