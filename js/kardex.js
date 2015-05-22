@@ -1,3 +1,25 @@
+//Variables globales
+var datosKardex = [];
+
+
+//Objetos
+var formularioOperaciones = document.getElementById("formularioOperaciones"),
+	contenidoKardex = document.getElementById("contenidoKardex");
+
+//Funciones
+
+//Listeners
+formularioOperaciones.onsubmit = function(e){
+	e.preventDefault();
+
+	if(validar.fecha(e.target[0].value) && (e.target[1].value === "entrada" || e.target[1].value === "salida") && validar.entero(e.target[2].value) && validar.flotante(e.target[3].value)){
+		console.log("Registrar");
+	}else{
+		console.log("Error!");
+	}
+}
+
+
 /*
 
 var decimales = function(decimales, numero){

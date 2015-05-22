@@ -38,6 +38,7 @@ table{
 	width: 60%;
 	height: 100%;
 	margin: auto;
+	-webkit-overflow-scrolling: touch;
 }
 
 .fix  *{
@@ -189,6 +190,9 @@ colgroup#ultimo{
 }
 .scrollDiv{
 	overflow: auto;
+	overflow-x: auto;
+	overflow-y: auto;
+	-webkit-overflow-scrolling: touch;
 	margin-left: 10px;
 }
 #contenedorModal{
@@ -252,7 +256,7 @@ colgroup#ultimo{
 .contenido{
 	width: 100%;
 	display: block;
-	overflow: auto;
+	overflow: none;
 }
 .textoSWAL{
 	font-size: 2rem!important;
