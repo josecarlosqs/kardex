@@ -7,15 +7,34 @@ var formularioOperaciones = document.getElementById("formularioOperaciones"),
 	contenidoKardex = document.getElementById("contenidoKardex");
 
 //Funciones
+var agregarAKardex = function(fecha,metodo,cantidad,precio,comprobante){
+	datosKardex.push();
+}
 
 //Listeners
 formularioOperaciones.onsubmit = function(e){
 	e.preventDefault();
 
-	if(validar.fecha(e.target[0].value) && (e.target[1].value === "entrada" || e.target[1].value === "salida") && validar.entero(e.target[2].value) && validar.flotante(e.target[3].value)){
-		console.log("Registrar");
+	if(validar.fecha(e.target[0].value)){
+		if((e.target[1].value === "entrada" || e.target[1].value === "salida")){
+			if(validar.entero(e.target[2].value)){
+				if(validar.flotante(e.target[3].value)){
+					console.log("Agregar a kardex");
+				}else{
+					e.target[3].focus();
+					swal({title:"Error", text:"El precio no es válido!",type:"error"});
+				}
+			}else{
+				e.target[2].focus();
+				swal({title:"Error", text:"La cantidad debe ser un numero entero!",type:"error"});
+			}
+		}else{
+			e.target[1].focus();
+			swal({title:"Error", text:"Debes seleccionar el tipo de operación!",type:"error"});
+		}
 	}else{
-		console.log("Error!");
+		e.target[0].focus();
+		swal({title:"Error", text:"Fecha no válida!",type:"error"});
 	}
 }
 
