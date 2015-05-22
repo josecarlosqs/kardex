@@ -6,6 +6,7 @@
 	<title>Kardex</title>
 	<link rel="stylesheet" type="text/css" href="css/normalize.css">
 	<link rel="stylesheet" type="text/css" href="css/sweetalert.css">
+	<link rel="stylesheet" type="text/css" href="css/pikaday.css">
 	<link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
 	<link rel="stylesheet" type="text/css" href="css/principal.css">
 </head>
@@ -25,7 +26,7 @@
 			</div>
 			<div class="contenido">
 				<div class="fix">
-					<form id="formularioOperaciones">
+					<form autocomplete="off" id="formularioOperaciones">
 						<div class="inputFormulario">
 							<label for="fecha">Fecha de la operación:</label>
 							<input type="text" name="fecha" id="fecha" placeholder="DD/MM/AA" required>
@@ -140,7 +141,7 @@
 
 <div id="modal">
 	<div id="contenedorModal">
-		<form id="datosIniciales">
+		<form autocomplete="off" id="datosIniciales">
 			<h3 class="subrayado txtCentro">Configuración del Kardex</h3>
 			<div class="inputFormulario"><label for="empresa">Empresa:</label><input type="text" id="empresa" name="empresa" autofocus required placeholder="Empresa a analizar"></div>
 			<div class="inputFormulario"><label for="responsable">Persona responsable:</label><input type="text" id="responsable" name="responsable" required placeholder="Responsable del Kardex"></div>
@@ -159,6 +160,7 @@
 </div>
 <script type="text/javascript" src="js/hammer.min.js"></script>
 <script type="text/javascript" src="js/sweetalert.min.js"></script>
+<script type="text/javascript" src="js/pikaday.min.js"></script>
 <script type="text/javascript" src="js/velocity.min.js"></script>
 <script type="text/javascript" src="js/principal.js"></script>
 <script type="text/javascript" src="js/kardex.js"></script>

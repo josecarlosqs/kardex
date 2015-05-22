@@ -25,7 +25,7 @@ h4 { font-size: 2.4rem; line-height: 1.35; letter-spacing: -.08rem; }
 h5 { font-size: 1.8rem; line-height: 1.5;  letter-spacing: -.05rem; }
 h6 { font-size: 1.5rem; line-height: 1.6;  letter-spacing: 0; }
 
-table{
+#tablaKardex{
 	width: 100%;
 	min-width: 1000px;
 	box-sizing: border-box;
@@ -38,7 +38,7 @@ table{
 	width: 60%;
 	height: 100%;
 	margin: auto;
-	-webkit-overflow-scrolling: touch;
+	
 }
 
 .fix  *{
@@ -188,13 +188,6 @@ colgroup#ultimo{
 .colUsr > a{
 	margin: 3px;
 }
-.scrollDiv{
-	overflow: auto;
-	overflow-x: auto;
-	overflow-y: auto;
-	-webkit-overflow-scrolling: touch;
-	margin-left: 10px;
-}
 #contenedorModal{
 	display: block;
 	background-color: white;
@@ -227,6 +220,10 @@ colgroup#ultimo{
 	-o-border-radius: 5px;
 	-ms-border-radius: 5px;
 	font-size: 2rem;
+	box-shadow: none;
+	-moz-box-shadow: none;
+	-webkit-box-shadow: none;
+	-o-box-shadow: none;
 }
 .btnVerdeGrande{
 	display: block;
@@ -256,7 +253,10 @@ colgroup#ultimo{
 .contenido{
 	width: 100%;
 	display: block;
-	overflow: none;
+	overflow: auto;
+	overflow-x: auto;
+	overflow-y: auto;
+	-webkit-overflow-scrolling: touch;
 }
 .textoSWAL{
 	font-size: 2rem!important;
