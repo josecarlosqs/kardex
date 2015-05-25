@@ -14,8 +14,6 @@ var agregarEntrada = function(fecha,cantidad,valorUnitario,proveedor,comprobante
 		comprobante = comprobante || "-";
 	stockTotal += parseInt(cantidad);
 	datosKardex.push({"tipo":"entrada","fecha":fecha,"cantidadIngresada":parseInt(cantidad),"restante":parseInt(cantidad),"valorUnitario":parseFloat(valorUnitario),"proveedor":proveedor,"comprobante":comprobante});
-	console.log(datosKardex);
-	console.log(stockTotal);
 },
 agregarSalida = function(fecha,cantidad,proveedor,comprobante){
 	var proveedor = proveedor || "-",
@@ -24,7 +22,7 @@ agregarSalida = function(fecha,cantidad,proveedor,comprobante){
 	datosKardex.push({"tipo":"salida","fecha":fecha,"cantidadSacada":parseInt(cantidad),"proveedor":proveedor,"comprobante":comprobante});
 	var cod = datosKardex.length - 1;
 	datosSalidas[cod] = generarSalidasSegunMetodoSeleccionado(cod);
-	console.log(datosSalidas);
+	
 },
 generarSalidasSegunMetodoSeleccionado = function(cod){
 	var tem = [];
@@ -35,32 +33,29 @@ generarSalidasSegunMetodoSeleccionado = function(cod){
 				if(datosKardex[x].tipo === "entrada" && datosKardex[x].restante > 0){
 					if(datosKardex[x].restante >= restanteParaSacar){
 						datosKardex[x].restante = datosKardex[x].restante - restanteParaSacar;
-						tem.push({"precioUnitario": datosKardex[x].valorUnitario,"cantidad":restanteParaSacar});
+						tem.push({"costoUnitario": datosKardex[x].valorUnitario,"cantidad":restanteParaSacar,"haber": datosKardex[x].restanteParaSacar * datosKardex[x].valorUnitario});
 						break;
 					}else{
-						tem.push({"precioUnitario": datosKardex[x].valorUnitario,"cantidad":datosKardex[x].restante});
+						tem.push({"costoUnitario": datosKardex[x].valorUnitario,"cantidad":datosKardex[x].restante,"haber": datosKardex[x].restante * datosKardex[x].valorUnitario});
 						restanteParaSacar -= datosKardex[x].restante;
 						datosKardex[x].restante = 0;
 					}
 				}
-				//Verificar luego
 				if(x === cod){
 					break;
 				}
 			}
 		break;
 		case 'ueps':
-			console.log("Entro a ueps");
 			var restanteParaSacar = datosKardex[cod].cantidadSacada;
 			for (var x = cod; x >= 0; x--) {
-				console.log("plep");
 				if(datosKardex[x].tipo === "entrada" && datosKardex[x].restante > 0){
 					if(datosKardex[x].restante >= restanteParaSacar){
 						datosKardex[x].restante = datosKardex[x].restante - restanteParaSacar;
-						tem.push({"precioUnitario": datosKardex[x].valorUnitario,"cantidad":restanteParaSacar});
+						tem.push({"costoUnitario": datosKardex[x].valorUnitario,"cantidad":restanteParaSacar,"haber": datosKardex[x].restanteParaSacar * datosKardex[x].valorUnitario});
 						break;
 					}else{
-						tem.push({"precioUnitario": datosKardex[x].valorUnitario,"cantidad":datosKardex[x].restante});
+						tem.push({"costoUnitario": datosKardex[x].valorUnitario,"cantidad":datosKardex[x].restante,"haber": datosKardex[x].restante * datosKardex[x].valorUnitario});
 						restanteParaSacar -= datosKardex[x].restante;
 						datosKardex[x].restante = 0;
 					}
@@ -68,7 +63,8 @@ generarSalidasSegunMetodoSeleccionado = function(cod){
 			};
 		break;
 		case 'pp':
-
+			var cu = obtenerSaldoHasta(cod)/obtenerExistenciaHasta(cod);
+			return {"costoUnitario": cu,"cantidad":datosKardex[cod].cantidadSacada,"haber": datosKardex[cod].cantidadSacada * cu};
 		break;
 		default:
 
@@ -101,7 +97,35 @@ mostrarMensajeNuevaENtradaKardex = function(msj){
 decimales = function(decimales, numero){
 	factor = Math.pow(10,decimales);
 	return Math.round(numero*factor)/factor;
-}
+},
+obtenerSaldoHasta = function(cod){
+	var total = 0;
+	for (var x = cod - 1; x >= 0; x--) {
+		if(datosKardex[x].tipo === "entrada"){
+			total += datosKardex[x].valorUnitario * datosKardex[x].cantidadIngresada;
+		}else{
+			if(configuracion.metodo !== "pp"){
+				for(y in datosSalidas[x]){
+					total -= datosSalidas[x][y].costoUnitario * datosSalidas[x][y].cantidad;
+				}
+			}else{
+				total -= datosSalidas[x].costoUnitario * datosSalidas[x].cantidad;
+			}
+		}
+	}
+	return total;
+},
+obtenerExistenciaHasta = function(cod){
+	var total = 0;
+	for (var x = cod - 1; x >= 0; x--) {
+		if(datosKardex[x].tipo === "entrada"){
+			total += datosKardex[x].cantidadIngresada;
+		}else{
+			total -= datosKardex[x].cantidadSacada;
+		}
+	}
+	return total;
+};
 
 
 //Listeners
@@ -119,11 +143,13 @@ formularioOperaciones.onsubmit = function(e){
 						agregarEntrada(e.target[0].value,e.target[2].value,e.target[3].value,e.target[4].value,e.target[5].value);
 						vaciarFormulario();
 						mostrarMensajeNuevaENtradaKardex("Nueva entrada registrada en Kardex");
+						console.log(datosSalidas);
 					}else{
 						if(parseInt(e.target[2].value) <= stockTotal){
 							agregarSalida(e.target[0].value,e.target[2].value,e.target[4].value,e.target[5].value);
 							vaciarFormulario();
 							mostrarMensajeNuevaENtradaKardex("Nueva salida registrada a Kardex");
+							console.log(datosSalidas);
 						}else{
 							e.target[2].focus();
 							swal("Error!","Stock insuficiente para cumplir con esta salida","error");
