@@ -96,14 +96,17 @@ formularioDatosIniciales.onsubmit = function(e){
 	e.preventDefault();
 	var dataSrc = e.target,
 		empresa = dataSrc[0].value,
-		responsable = dataSrc[1].value,
-		metodo = dataSrc[2].value;
-		n_decimales = parseInt(dataSrc[3].value) || 2
+		responsable = dataSrc[2].value,
+		mercancia = dataSrc[1].value;
+		metodo = dataSrc[3].value;
+		n_decimales = parseInt(dataSrc[4].value) || 2
  	
  	configuracion.empresa = empresa;
  	configuracion.responsable = responsable;
  	configuracion.metodo = metodo;
+ 	configuracion.mercancia = mercancia;
  	configuracion.decimales = n_decimales;
+ 	console.log(configuracion);
 	dimensionarDivContenido(function(){
 		Velocity(modal, "fadeOut", {duration: 200, complete:function(){
 			if(reconfigurar === true){

@@ -1,5 +1,6 @@
 //Variables globales
 var datosKardex = [],
+	datosSalidas = [],
 	stockTotal = 0;
 
 //Objetos
@@ -17,24 +18,28 @@ var agregarEntrada = function(fecha,cantidad,valorUnitario,proveedor,comprobante
 	console.log(stockTotal);
 },
 agregarSalida = function(fecha,cantidad,proveedor,comprobante){
-	/*var proveedor = proveedor || "-",
+	var proveedor = proveedor || "-",
 		comprobante = comprobante || "-";
 	stockTotal -= parseInt(cantidad);
-	datosKardex.push({"tipo":"salida","fecha":fecha,"cantidadSacada":parseInt(cantidad),"proveedor":proveedor,"comprobante":comprobante,"salidas":generarSalidas(datosKardex.length-1)})*/
-	},
-generarSalidas = function(cod){
-	salidas[cod] = [];
+	datosKardex.push({"tipo":"salida","fecha":fecha,"cantidadSacada":parseInt(cantidad),"proveedor":proveedor,"comprobante":comprobante});
+	var cod = datosKardex.length - 1;
+	datosSalidas[cod] = generarSalidasSegunMetodoSeleccionado(cod);
+	console.log(datosSalidas);
+},
+generarSalidasSegunMetodoSeleccionado = function(cod){
+	var tem = [];
 	switch(configuracion.metodo){
 		case 'peps':
+		console.log("Entro a peps");
+		var restanteParaSacar = datosKardex[cod].cantidadSacada;
 			for(x in datosKardex){
-				if(datosKardex[x].tipo === "entrada"){
-					var restanteParaSacar = datosKardex[cod].cantidadSacada;
+				if(datosKardex[x].tipo === "entrada" && datosKardex[x].restante > 0){
 					if(datosKardex[x].restante >= restanteParaSacar){
-						datosKardex[x].restante = restanteParaSacar - datosKardex[x].restante;
-						salidas[cod].push({"precioUnitario": datosKardex[x].valorUnitario,"cantidad":restanteParaSacar});
+						datosKardex[x].restante = datosKardex[x].restante - restanteParaSacar;
+						tem.push({"precioUnitario": datosKardex[x].valorUnitario,"cantidad":restanteParaSacar});
 						break;
 					}else{
-						salidas[cod].push({"precioUnitario": datosKardex[x].valorUnitario,"cantidad":restanteParaSacar});
+						tem.push({"precioUnitario": datosKardex[x].valorUnitario,"cantidad":datosKardex[x].restante});
 						restanteParaSacar -= datosKardex[x].restante;
 						datosKardex[x].restante = 0;
 					}
@@ -49,6 +54,8 @@ generarSalidas = function(cod){
 
 		break;
 	}
+
+	return tem;
 },
 vaciarFormulario = function(){
 	formularioOperaciones.cantidad.value = "";
