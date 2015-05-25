@@ -30,8 +30,7 @@ generarSalidasSegunMetodoSeleccionado = function(cod){
 	var tem = [];
 	switch(configuracion.metodo){
 		case 'peps':
-		console.log("Entro a peps");
-		var restanteParaSacar = datosKardex[cod].cantidadSacada;
+			var restanteParaSacar = datosKardex[cod].cantidadSacada;
 			for(x in datosKardex){
 				if(datosKardex[x].tipo === "entrada" && datosKardex[x].restante > 0){
 					if(datosKardex[x].restante >= restanteParaSacar){
@@ -51,8 +50,28 @@ generarSalidasSegunMetodoSeleccionado = function(cod){
 			}
 		break;
 		case 'ueps':
+			console.log("Entro a ueps");
+			var restanteParaSacar = datosKardex[cod].cantidadSacada;
+			for (var x = cod; x >= 0; x--) {
+				console.log("plep");
+				if(datosKardex[x].tipo === "entrada" && datosKardex[x].restante > 0){
+					if(datosKardex[x].restante >= restanteParaSacar){
+						datosKardex[x].restante = datosKardex[x].restante - restanteParaSacar;
+						tem.push({"precioUnitario": datosKardex[x].valorUnitario,"cantidad":restanteParaSacar});
+						break;
+					}else{
+						tem.push({"precioUnitario": datosKardex[x].valorUnitario,"cantidad":datosKardex[x].restante});
+						restanteParaSacar -= datosKardex[x].restante;
+						datosKardex[x].restante = 0;
+					}
+				}
+			};
+		break;
+		case 'pp':
 
 		break;
+		default:
+
 	}
 
 	return tem;
