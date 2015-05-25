@@ -13,6 +13,9 @@
 <body onresize="dimensionarDivContenido()">
 <div id="creditos">~ Proyecto final de Contabilidad General - <a href="https://github.com/josecarlosqs/kardex" target="_blank"><i class="fa fa-github"></i></a> ~</div>
 <div id="general">
+	<div id="mensajeKardex">
+		<i class="fa fa-check"></i>&nbsp;Nueva entrada registrada al kardex
+	</div>
 	<div id="contenedor">		
 		<div class="pantalla">
 			<div class="tituloPantalla">
@@ -43,9 +46,9 @@
 							<label for="cantidad">Cantidad:</label>
 							<input type="text" name="cantidad" id="cantidad" placeholder="Cantidad" required>
 						</div>
-						<div class="inputFormulario">
+						<div class="inputFormulario oculto" id="costoUnitario">
 							<label for="compra">Valor unitario de compra (S/.):</label>
-							<input type="text" name="compra" id="compra" placeholder="Punto decimal, no usar coma" required>
+							<input type="text" name="compra" id="compra" placeholder="Punto decimal, no usar coma">
 						</div>
 						<div class="inputFormulario">
 							<label for="persona">Proveedor / Cliente:</label>
@@ -115,6 +118,7 @@
 		<form autocomplete="off" id="datosIniciales">
 			<h3 class="subrayado txtCentro">Configuración del Kardex</h3>
 			<div class="inputFormulario"><label for="empresa">Empresa:</label><input type="text" id="empresa" name="empresa" autofocus required placeholder="Empresa a analizar"></div>
+			<div class="inputFormulario"><label for="empresa">Mercancia:</label><input type="text" id="mercancia" name="mercancia" autofocus required placeholder="Mercancia a inventariar"></div>
 			<div class="inputFormulario"><label for="responsable">Persona responsable:</label><input type="text" id="responsable" name="responsable" required placeholder="Responsable del Kardex"></div>
 			<div class="inputFormulario"><label for="metodo">Metodo a usar:</label><select id="metodo" name="metodo" required>
 				<option value="">~ Metodo a usar ~</option>

@@ -261,3 +261,29 @@ colgroup#ultimo{
 .textoSWAL{
 	font-size: 2rem!important;
 }
+.oculto{
+	display: none;
+}
+.mensajeKardex{
+	display: block;
+	position: absolute;
+	width: 250px;
+	padding: 10px;
+	z-index: 700;
+	white-space: normal;
+	bottom: 60px;
+	height: 60px;
+	vertical-align: middle;
+	right: -250px;
+	background-color: #ecf0f1;
+	border: 1px #2980b9 solid;
+	border-radius: 5px;
+	text-align: center;
+	-ms-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	-o-border-radius: 5px;
+}
+.mensajeKardex > .fa{
+	color: #27ae60;
+}

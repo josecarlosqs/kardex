@@ -39,10 +39,10 @@ var dimensionarDivContenido = function(callback){
 	cambiarPantalla=function(){
 		if(pantallaActual == 0){
 			pantallaActual = 1;
-			Velocity(contenedor, {left: -1*pantallas[pantallaActual].offsetLeft}, {duration: 500, easing: "easeOutQuint"});
+			Velocity(contenedor, {left: -1*pantallas[pantallaActual].offsetLeft}, {duration: 500});
 		}else{
 			pantallaActual = 0;
-			Velocity(contenedor, {left: pantallas[pantallaActual].offsetLeft}, {duration: 500, easing: "easeOutQuint" });
+			Velocity(contenedor, {left: pantallas[pantallaActual].offsetLeft}, {duration: 500});
 		}
 	},
 	verDatos = function(){
