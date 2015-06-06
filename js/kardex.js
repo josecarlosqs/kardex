@@ -21,7 +21,7 @@ var registrar = {
 			valorUnitario = parseFloat(valorUnitario),
 			persona = persona || "<span class=\"campoVacio\">(No especificado)</span>",
 			factura = factura || "<span class=\"campoVacio\">(No especificado)</span>";
-		var ins = {"fecha":formato.fechaObj(fecha),"factura":factura,"persona":persona,"entrada":cantidadEntrada,"valor":valorUnitario};
+		var ins = {"tipo":"entrada","fecha":formato.fechaObj(fecha),"factura":factura,"persona":persona,"entrada":cantidadEntrada,"valor":valorUnitario};
 		var ult = datosKardex.length - 1;
 		var indice = 0;
 		console.log(ult);
@@ -225,14 +225,16 @@ obtenerSalidasSegunMetodoSeleccionado = function(pos,cant,fecha){
 		case 'peps':
 			var i;
 			for (i = 0; i <= pos; i++) {
-				if(parseInt(filas[i].dataset.restante) >= cant){
-					filas[i].dataset.restante = parseInt(filas[i].dataset.restante) - cant;
-					tem.push({"fecha":fecha,"salida":cant,"pu":parseInt(filas[i].dataset.vu)});
-					break;
-				}else{
-					cant = cant-parseInt(filas[i].dataset.restante);
-					tem.push({"fecha":fecha,"salida":parseInt(filas[i].dataset.restante),"pu":parseInt(filas[i].dataset.vu)});
-					filas[i].dataset.restante = 0;
+				if(filas[i].dataset.tipo === "entrada" && parseInt(filas[i].dataset.restante) > 0){
+					if(parseInt(filas[i].dataset.restante) >= cant){
+						filas[i].dataset.restante = parseInt(filas[i].dataset.restante) - cant;
+						tem.push({"tipo":"salida","fecha":fecha,"salida":cant,"pu":parseFloat(filas[i].dataset.vu)});
+						break;
+					}else{
+						cant = cant-parseInt(filas[i].dataset.restante);
+						tem.push({"tipo":"salida","fecha":fecha,"salida":parseInt(filas[i].dataset.restante),"pu":parseFloat(filas[i].dataset.vu)});
+						filas[i].dataset.restante = 0;
+					}
 				}
 			};
 
@@ -240,26 +242,28 @@ obtenerSalidasSegunMetodoSeleccionado = function(pos,cant,fecha){
 		case 'ueps':
 			var i;
 			for (i = pos-1; i >= 0; i--) {
-				if(parseInt(filas[i].dataset.restante) >= cant){
-					filas[i].dataset.restante = parseInt(filas[i].dataset.restante) - cant;
-					tem.push({"fecha":fecha,"salida":cant,"pu":parseInt(filas[i].dataset.vu)});
-					break;
-				}else{
-					cant = cant-parseInt(filas[i].dataset.restante);
-					tem.push({"fecha":fecha,"salida":parseInt(filas[i].dataset.restante),"pu":parseInt(filas[i].dataset.vu)});
-					filas[i].dataset.restante = 0;
+				if(filas[i].dataset.tipo === "entrada" && parseInt(filas[i].dataset.restante) > 0){
+					if(parseInt(filas[i].dataset.restante) >= cant){
+						filas[i].dataset.restante = parseInt(filas[i].dataset.restante) - cant;
+						tem.push({"tipo":"salida","fecha":fecha,"salida":cant,"pu":parseFloat(filas[i].dataset.vu)});
+						break;
+					}else{
+						cant = cant-parseInt(filas[i].dataset.restante);
+						tem.push({"tipo":"salida","fecha":fecha,"salida":parseInt(filas[i].dataset.restante),"pu":parseFloat(filas[i].dataset.vu)});
+						filas[i].dataset.restante = 0;
+					}
 				}
 			};
 		break;
 		case 'pp':
 			var fila = filas[pos-1];
 			var pu = parseFloat(fila.cells[10].innerHTML)/parseInt(fila.cells[5].innerHTML);
-			tem.push({"fecha":fecha,"salida":cant,"pu":pu});
+			tem.push({"tipo":"salida","fecha":fecha,"salida":cant,"pu":pu});
 		break;
 		default:
 
 	}
-
+	console.log(tem)
 	return tem;
 };
 
@@ -299,6 +303,22 @@ var vaciarFormulario = function(){
 	formularioOperaciones.persona.value = "";
 	formularioOperaciones.comprobante.value = "";
 	formularioOperaciones.fecha.focus();
+},
+recalcularSalidas = function(){
+	console.log(datosKardex)
+	console.log("Recalculando salidas con la nueva metodologia");
+	var i,total = datosKardex.length;
+	cuerpoTablaKardex.innerHTML = "";
+
+	for(i = 0; i<total;i++){
+		if(datosKardex[i].tipo === "salida"){
+			datosKardex.splice(i,1);
+		}
+	}
+	console.log(datosKardex);
+	//eliminart salidas de datosKardex
+	//reponer
+	//reimprimir
 }
 
 

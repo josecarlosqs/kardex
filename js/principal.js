@@ -84,8 +84,8 @@ formularioDatosIniciales.onsubmit = function(e){
 		empresa = dataSrc[0].value,
 		responsable = dataSrc[2].value,
 		mercancia = dataSrc[1].value;
-		metodo = dataSrc[3].value;
-		n_decimales = parseInt(dataSrc[4].value) || 2
+		metodo = dataSrc[3].value,
+		n_decimales = parseInt(dataSrc[4].value) || 2;
  	
  	configuracion.empresa = empresa;
  	configuracion.responsable = responsable;
@@ -96,6 +96,9 @@ formularioDatosIniciales.onsubmit = function(e){
 	dimensionarDivContenido(function(){
 		Velocity(modal, "fadeOut", {duration: 200, complete:function(){
 			if(reconfigurar === true){
+				/*if(metodo !== configuracion.metodo){
+					recalcularSalidas();
+				}*/
 				swal({title: "Exito", text:"Kardex reconfigurado!",type:"success",timer: 1500});
 			}else{
 				swal({title: "Exito", text:"Kardex configurado!\nPuedes empezar a llenarlo",type:"success",timer: 1500});
