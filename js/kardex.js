@@ -123,7 +123,7 @@ var insertarFilaEntrada = function(obj,indice){
 
 	celda = fila.insertCell(11);
 	celda.classList.add('colUsr');
-	celda.innerHTML = "<a href=\"#\" class=\"btnUsr\" data-accion=\"editar\" data-codigo=\"\" title=\"Editar esta fila\"><i class=\"fa fa-pencil\"></i></a><a href=\"#\" class=\"btnUsr\" data-accion=\"eliminar\" data-codigo=\"\" title=\"Eliminar esta fila\"><i class=\"fa fa-trash-o\"></i></a>";
+	celda.innerHTML = "<a href=\"#\" class=\"btnUsr\" onclick=\"eliminarFila("+indice+")\" title=\"Eliminar esta fila\"><i class=\"fa fa-trash-o\"></i></a>";
 
 	calcularTotalesTabla();
 
@@ -168,7 +168,7 @@ var insertarFilaEntrada = function(obj,indice){
 
 	celda = fila.insertCell(11);
 	celda.classList.add('colUsr');
-	celda.innerHTML = "<a href=\"#\" class=\"btnUsr\" data-accion=\"editar\" data-codigo=\"\" title=\"Editar esta fila\"><i class=\"fa fa-pencil\"></i></a><a href=\"#\" class=\"btnUsr\" data-accion=\"eliminar\" data-codigo=\"\" title=\"Eliminar esta fila\"><i class=\"fa fa-trash-o\"></i></a>";
+	celda.innerHTML = "<a href=\"#\" class=\"btnUsr\" onclick=\"eliminarFila("+indice+")\" title=\"Eliminar esta fila\"><i class=\"fa fa-trash-o\"></i></a>";
 
 	calcularTotalesTabla();
 }
@@ -236,7 +236,7 @@ obtenerSalidasSegunMetodoSeleccionado = function(pos,cant,fecha){
 						filas[i].dataset.restante = 0;
 					}
 				}
-			};
+			};datosKardex
 
 		break;
 		case 'ueps':
@@ -319,6 +319,22 @@ recalcularSalidas = function(){
 	//eliminart salidas de datosKardex
 	//reponer
 	//reimprimir
+},
+eliminarFila = function(indice){
+	swal({
+	  title: "Advertencia!",
+	  text: "Esta es la ultima oportunidad para considerarlo!, segur@ que quieres eliminar este registro?",
+	  type: "warning",
+	  showCancelButton: true,
+	  confirmButtonColor: "#DD6B55",
+	  confirmButtonText: "Eliminar!",
+	  closeOnConfirm: true
+	},
+	function(){
+		datosKardex.splice(indice,1);
+		cuerpoTablaKardex.deleteRow(indice);
+		calcularTotalesTabla();
+	});
 }
 
 
