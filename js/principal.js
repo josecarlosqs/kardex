@@ -53,20 +53,6 @@ var dimensionarDivContenido = function(callback){
 			customClass: "sweetExtra"
 		});
 	},
-	validar = {
-		fecha: function(fecha){
-			var regex =  /^(0[1-9]|[12][0-9]|3[01])[-\/](0[1-9]|1[012])[-\/](19|20)?[019][1-9]$/m;
-			return regex.test(fecha);
-		},
-		entero: function(num){
-			var regex = /^[0-9]+$/m;
-			return regex.test(num);
-		},
-		flotante: function(num){
-			var regex = /^[0-9]+([\.][0-9]+)?$/m;
-			return regex.test(num);
-		}
-	},
 	aDosDigitos = function(numero){
 		var str = "" + numero;
 		var pad = "00";

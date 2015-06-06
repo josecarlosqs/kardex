@@ -122,6 +122,9 @@ html,body{
 .tituloPantalla > .boton#derecha{
 	right: 10px;
 }
+.tituloPantalla > .boton#imprimir{
+	right: 200px;
+}
 .tituloPantalla > .boton#izquierda{
 	left: 10px;
 }
@@ -286,4 +289,17 @@ colgroup#ultimo{
 }
 .mensajeKardex > .fa{
 	color: #27ae60;
+}
+.campoVacio{
+	color: #555;
+	font-style: italic;
+	font-size: 0.8em;
+}
+.tituloSalida{
+	background-color: #ecf0f1;
+}
+.filaSalida td{
+	padding-top: 2px;
+	padding-bottom: 2px;
+	font-style: italic;
 }

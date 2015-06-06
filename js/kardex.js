@@ -1,78 +1,297 @@
-//Variables globales
+/**
+*** OBJETOS Y VARIABLES NESESARIAS ***
+**/
 var datosKardex = [],
 	datosSalidas = [],
-	stockTotal = 0;
+	total = {"especie":0,"saldo":0};
 
-//Objetos
-var contenidoKardex = document.getElementById("contenidoKardex"),
-	divCostoUnitario = document.getElementById("costoUnitario"),
-	mensajekardex = document.getElementById("mensajeKardex");
+/**
+*** REFERENCIAS A DOM
+**/
+var	tablaKardex = document.getElementById("tablaKardex");
+	cuerpoTablaKardex = tablaKardex.getElementsByTagName('tbody')[0],
+	divCostoUnitario = document.getElementById("costoUnitario");
 
-//Funciones
-var agregarEntrada = function(fecha,cantidad,valorUnitario,proveedor,comprobante){
-	var proveedor = proveedor || "-",
-		comprobante = comprobante || "-";
-	stockTotal += parseInt(cantidad);
-	datosKardex.push({"tipo":"entrada","fecha":fecha,"cantidadIngresada":parseInt(cantidad),"restante":parseInt(cantidad),"valorUnitario":parseFloat(valorUnitario),"proveedor":proveedor,"comprobante":comprobante});
-},
-agregarSalida = function(fecha,cantidad,proveedor,comprobante){
-	var proveedor = proveedor || "-",
-		comprobante = comprobante || "-";
-	stockTotal -= parseInt(cantidad);
-	datosKardex.push({"tipo":"salida","fecha":fecha,"cantidadSacada":parseInt(cantidad),"proveedor":proveedor,"comprobante":comprobante});
-	var cod = datosKardex.length - 1;
-	datosSalidas[cod] = generarSalidasSegunMetodoSeleccionado(cod);
-	
-},
-generarSalidasSegunMetodoSeleccionado = function(cod){
-	var tem = [];
-	switch(configuracion.metodo){
-		case 'peps':
-			var restanteParaSacar = datosKardex[cod].cantidadSacada;
-			for(x in datosKardex){
-				if(datosKardex[x].tipo === "entrada" && datosKardex[x].restante > 0){
-					if(datosKardex[x].restante >= restanteParaSacar){
-						datosKardex[x].restante = datosKardex[x].restante - restanteParaSacar;
-						tem.push({"costoUnitario": datosKardex[x].valorUnitario,"cantidad":restanteParaSacar,"haber": datosKardex[x].restanteParaSacar * datosKardex[x].valorUnitario});
-						break;
-					}else{
-						tem.push({"costoUnitario": datosKardex[x].valorUnitario,"cantidad":datosKardex[x].restante,"haber": datosKardex[x].restante * datosKardex[x].valorUnitario});
-						restanteParaSacar -= datosKardex[x].restante;
-						datosKardex[x].restante = 0;
-					}
-				}
-				if(x === cod){
+/**
+*** FUNCIONES PRINCIPALES ***
+**/
+var registrar = {
+	entrada: function(fecha,cantidadEntrada,valorUnitario,persona,factura){
+		var cantidadEntrada = parseInt(cantidadEntrada),
+			valorUnitario = parseFloat(valorUnitario),
+			persona = persona || "<span class=\"campoVacio\">(No especificado)</span>",
+			factura = factura || "<span class=\"campoVacio\">(No especificado)</span>";
+		var ins = {"fecha":formato.fechaObj(fecha),"factura":factura,"persona":persona,"entrada":cantidadEntrada,"valor":valorUnitario};
+		var ult = datosKardex.length - 1;
+		var indice = 0;
+		console.log(ult);
+		if(ult === -1){
+			datosKardex.push(ins);
+		}else{
+			for (var i = ult; i >= 0; i--) {
+				if(datosKardex[i].fecha.getTime() < ins.fecha.getTime()){
+					indice = i+1;
+					datosKardex.splice(indice,0,ins);
 					break;
 				}
+			};
+		}
+		//datosKardex.push(ins);
+		total.especie += cantidadEntrada;
+		total.saldo += cantidadEntrada*valorUnitario;
+		insertarFilaEntrada(ins,indice);
+
+	},
+	salida: function(fecha,cantidadSalida,persona,factura){
+		var cantidadSalida = parseInt(cantidadSalida),
+			valorUnitario = parseFloat(valorUnitario),
+			persona = persona || "<span class=\"campoVacio\">(No especificado)</span>",
+			factura = factura || "<span class=\"campoVacio\">(No especificado)</span>";
+		var ins = {"tipo":"salidaTitulo","fecha":formato.fechaObj(fecha),"factura":factura,"persona":persona,"salida":cantidadSalida};
+		var ult = datosKardex.length - 1;
+		var indice = 0;
+		var filas = cuerpoTablaKardex.rows;
+		var cantFilas = filas.length;
+		for (var i = ult; i >= 0; i--) {
+			if(datosKardex[i].fecha.getTime() < ins.fecha.getTime()){
+				indice = i+1;
+				break;
 			}
+		}
+		if(parseInt(filas[indice-1].cells[5].innerHTML) >= cantidadSalida){
+			insertarFilaTituloSalida(ins,indice);
+			datosKardex.splice(indice,0,ins);
+			//datosKardex.push(ins);
+			total.especie -= cantidadSalida;
+			var salidas = obtenerSalidasSegunMetodoSeleccionado(indice,cantidadSalida,formato.fechaObj(fecha));
+			
+			for (var j = salidas.length - 1; j >= 0 ; j--) {
+				insertarFilaSalida(salidas[j],indice+1);
+				datosKardex.splice(indice+1,0,salidas[j]);
+			};
+
+			//total.saldo -= cantidadSalida*valorUnitario;
+		
+			mostrarMensajeNuevaEntradaKardex("Nueva salida registrada a Kardex");
+		}else{
+			swal("Error!","Stock insuficiente para cumplir con esta salida","error");
+		}
+
+	}
+}
+
+var insertarFilaEntrada = function(obj,indice){
+	console.log(indice);
+	fila = cuerpoTablaKardex.insertRow(indice);
+	fila.dataset.tipo = "entrada";
+	var celda = fila.insertCell(0);
+	celda.innerHTML = formato.fechaStr(obj.fecha);
+
+	celda = fila.insertCell(1);
+	celda.innerHTML = obj.factura;
+
+	celda = fila.insertCell(2);
+	celda.innerHTML = obj.persona;
+
+	celda = fila.insertCell(3);
+	celda.innerHTML = obj.entrada;
+	fila.dataset.restante = obj.entrada;
+	fila.dataset.total = obj.entrada;
+
+	celda = fila.insertCell(4);
+	celda.innerHTML = "-";
+
+	celda = fila.insertCell(5);
+	celda.innerHTML = "<i class=\"fa fa-spinner\"></i>";
+
+	celda = fila.insertCell(6);
+	celda.innerHTML = formato.decimales(obj.valor,configuracion.decimales);
+	fila.dataset.vu = obj.valor;
+
+	celda = fila.insertCell(7);
+	celda.innerHTML = "-";
+
+	celda = fila.insertCell(8);
+	celda.innerHTML = formato.decimales(obj.entrada * obj.valor,configuracion.decimales);
+	fila.dataset.debe = obj.entrada * obj.valor;
+
+	celda = fila.insertCell(9);
+	celda.innerHTML = "-";
+
+	celda = fila.insertCell(10);
+	celda.innerHTML = "<i class=\"fa fa-spinner\"></i>";
+
+	celda = fila.insertCell(11);
+	celda.classList.add('colUsr');
+	celda.innerHTML = "<a href=\"#\" class=\"btnUsr\" data-accion=\"editar\" data-codigo=\"\" title=\"Editar esta fila\"><i class=\"fa fa-pencil\"></i></a><a href=\"#\" class=\"btnUsr\" data-accion=\"eliminar\" data-codigo=\"\" title=\"Eliminar esta fila\"><i class=\"fa fa-trash-o\"></i></a>";
+
+	calcularTotalesTabla();
+
+//	cuerpoTablaKardex.appendChild(fila);
+},insertarFilaTituloSalida = function(obj,indice){
+	fila = cuerpoTablaKardex.insertRow(indice);
+	fila.dataset.tipo = "tituloSalida";
+	fila.classList.add("tituloSalida");
+	var celda = fila.insertCell(0);
+	celda.innerHTML = formato.fechaStr(obj.fecha);
+
+	celda = fila.insertCell(1);
+	celda.innerHTML = obj.factura;
+
+	celda = fila.insertCell(2);
+	celda.innerHTML = obj.persona;
+
+	celda = fila.insertCell(3);
+	celda.innerHTML = "-";
+
+	celda = fila.insertCell(4);
+	celda.innerHTML = obj.salida;
+	fila.dataset.salida = obj.salida;
+
+	celda = fila.insertCell(5);
+	celda.innerHTML = "-";
+
+	celda = fila.insertCell(6);
+	celda.innerHTML = "-";
+
+	celda = fila.insertCell(7);
+	celda.innerHTML = "-";
+
+	celda = fila.insertCell(8);
+	celda.innerHTML = "-";
+
+	celda = fila.insertCell(9);
+	celda.innerHTML = "-";
+
+	celda = fila.insertCell(10);
+	celda.innerHTML = "-";
+
+	celda = fila.insertCell(11);
+	celda.classList.add('colUsr');
+	celda.innerHTML = "<a href=\"#\" class=\"btnUsr\" data-accion=\"editar\" data-codigo=\"\" title=\"Editar esta fila\"><i class=\"fa fa-pencil\"></i></a><a href=\"#\" class=\"btnUsr\" data-accion=\"eliminar\" data-codigo=\"\" title=\"Eliminar esta fila\"><i class=\"fa fa-trash-o\"></i></a>";
+
+	calcularTotalesTabla();
+}
+,insertarFilaSalida = function(obj,indice){
+	fila = cuerpoTablaKardex.insertRow(indice);
+	fila.classList.add("filaSalida");
+	fila.dataset.tipo = "salida";
+	var celda = fila.insertCell(0);
+	celda.innerHTML = formato.fechaStr(obj.fecha);
+
+	celda = fila.insertCell(1);
+	celda.innerHTML = "~";
+
+	celda = fila.insertCell(2);
+	celda.innerHTML = "~";
+
+	celda = fila.insertCell(3);
+	celda.innerHTML = "~";
+
+	celda = fila.insertCell(4);
+	celda.innerHTML = obj.salida;
+	fila.dataset.total = obj.salida;
+
+	celda = fila.insertCell(5);
+	celda.innerHTML = "<i class=\"fa fa-spinner\"></i>";
+
+	celda = fila.insertCell(6);
+	celda.innerHTML = "-";
+
+	celda = fila.insertCell(7);
+	celda.innerHTML = formato.decimales(obj.pu,configuracion.decimales);
+
+	celda = fila.insertCell(8);
+	celda.innerHTML = "-";
+
+	celda = fila.insertCell(9);
+	celda.innerHTML = formato.decimales(obj.salida * obj.pu,configuracion.decimales);
+	fila.dataset.haber = obj.salida * obj.pu;
+
+	celda = fila.insertCell(10);
+	celda.innerHTML = "<i class=\"fa fa-spinner\"></i>";
+
+	celda = fila.insertCell(11);
+	celda.classList.add('colUsr');
+	celda.innerHTML = "";
+
+	calcularTotalesTabla();
+},
+obtenerSalidasSegunMetodoSeleccionado = function(pos,cant,fecha){
+	var tem = [];
+	var filas = cuerpoTablaKardex.rows;
+	var cantFilas = filas.length;
+	switch(configuracion.metodo){
+		case 'peps':
+			var i;
+			for (i = 0; i <= pos; i++) {
+				if(parseInt(filas[i].dataset.restante) >= cant){
+					filas[i].dataset.restante = parseInt(filas[i].dataset.restante) - cant;
+					tem.push({"fecha":fecha,"salida":cant,"pu":parseInt(filas[i].dataset.vu)});
+					break;
+				}else{
+					cant = cant-parseInt(filas[i].dataset.restante);
+					tem.push({"fecha":fecha,"salida":parseInt(filas[i].dataset.restante),"pu":parseInt(filas[i].dataset.vu)});
+					filas[i].dataset.restante = 0;
+				}
+			};
+
 		break;
 		case 'ueps':
-			var restanteParaSacar = datosKardex[cod].cantidadSacada;
-			for (var x = cod; x >= 0; x--) {
-				if(datosKardex[x].tipo === "entrada" && datosKardex[x].restante > 0){
-					if(datosKardex[x].restante >= restanteParaSacar){
-						datosKardex[x].restante = datosKardex[x].restante - restanteParaSacar;
-						tem.push({"costoUnitario": datosKardex[x].valorUnitario,"cantidad":restanteParaSacar,"haber": datosKardex[x].restanteParaSacar * datosKardex[x].valorUnitario});
-						break;
-					}else{
-						tem.push({"costoUnitario": datosKardex[x].valorUnitario,"cantidad":datosKardex[x].restante,"haber": datosKardex[x].restante * datosKardex[x].valorUnitario});
-						restanteParaSacar -= datosKardex[x].restante;
-						datosKardex[x].restante = 0;
-					}
+			var i;
+			for (i = pos-1; i >= 0; i--) {
+				if(parseInt(filas[i].dataset.restante) >= cant){
+					filas[i].dataset.restante = parseInt(filas[i].dataset.restante) - cant;
+					tem.push({"fecha":fecha,"salida":cant,"pu":parseInt(filas[i].dataset.vu)});
+					break;
+				}else{
+					cant = cant-parseInt(filas[i].dataset.restante);
+					tem.push({"fecha":fecha,"salida":parseInt(filas[i].dataset.restante),"pu":parseInt(filas[i].dataset.vu)});
+					filas[i].dataset.restante = 0;
 				}
 			};
 		break;
 		case 'pp':
-			var cu = obtenerSaldoHasta(cod)/obtenerExistenciaHasta(cod);
-			return {"costoUnitario": cu,"cantidad":datosKardex[cod].cantidadSacada,"haber": datosKardex[cod].cantidadSacada * cu};
+			var fila = filas[pos-1];
+			var pu = parseFloat(fila.cells[10].innerHTML)/parseInt(fila.cells[5].innerHTML);
+			tem.push({"fecha":fecha,"salida":cant,"pu":pu});
 		break;
 		default:
 
 	}
 
 	return tem;
-},
-vaciarFormulario = function(){
+};
+
+/***
+** FUNCIONES CALCULAR ***
+***/
+var calcularTotalesTabla = function(){
+	var filas = cuerpoTablaKardex.rows;
+	var totalEspecie = 0;
+	var saldoTotal = 0;
+	var totalFilas = filas.length;
+	var i;
+	for(i = 0; i < totalFilas; i++){
+		if(filas[i].dataset.tipo !== "tituloSalida"){
+			if(filas[i].dataset.tipo === "entrada"){				
+				totalEspecie += parseInt(filas[i].dataset.total);
+				saldoTotal += parseFloat(filas[i].dataset.debe);	
+			}else{
+				totalEspecie -= parseInt(filas[i].dataset.total);
+				saldoTotal -= parseFloat(filas[i].dataset.haber);
+			}
+
+			filas[i].cells[5].innerHTML = formato.decimales(totalEspecie,configuracion.decimales);
+			filas[i].cells[10].innerHTML = formato.decimales(saldoTotal,configuracion.decimales);
+		}
+	}
+};
+
+/**
+*** OTRAS FUNCIONES
+**/
+var vaciarFormulario = function(){
 	formularioOperaciones.cantidad.value = "";
 	formularioOperaciones.compra.value = "";
 	formularioOperaciones.tipoEspecie.selectedIndex = 0;
@@ -80,52 +299,7 @@ vaciarFormulario = function(){
 	formularioOperaciones.persona.value = "";
 	formularioOperaciones.comprobante.value = "";
 	formularioOperaciones.fecha.focus();
-},
-mostrarMensajeNuevaENtradaKardex = function(msj){
-	var divMsj=document.createElement("div"),
-		mensajes = document.getElementsByClassName("mensajeKardex");
-	divMsj.classList.add('mensajeKardex');
-	divMsj.innerHTML = "<i class=\"fa fa-check\"></i>&nbsp;"+msj;
-	if(mensajes.length > 0){
-		Velocity(mensajes, {bottom: "+=90"}, {duration:150});
-	}
-	general.appendChild(divMsj);
-	Velocity(divMsj,{right:20},{duration:200,complete:function(e){
-		setTimeout(function(edom){Velocity(edom, "fadeOut", 150)},1500,this)
-	}});
-},
-decimales = function(decimales, numero){
-	factor = Math.pow(10,decimales);
-	return Math.round(numero*factor)/factor;
-},
-obtenerSaldoHasta = function(cod){
-	var total = 0;
-	for (var x = cod - 1; x >= 0; x--) {
-		if(datosKardex[x].tipo === "entrada"){
-			total += datosKardex[x].valorUnitario * datosKardex[x].cantidadIngresada;
-		}else{
-			if(configuracion.metodo !== "pp"){
-				for(y in datosSalidas[x]){
-					total -= datosSalidas[x][y].costoUnitario * datosSalidas[x][y].cantidad;
-				}
-			}else{
-				total -= datosSalidas[x].costoUnitario * datosSalidas[x].cantidad;
-			}
-		}
-	}
-	return total;
-},
-obtenerExistenciaHasta = function(cod){
-	var total = 0;
-	for (var x = cod - 1; x >= 0; x--) {
-		if(datosKardex[x].tipo === "entrada"){
-			total += datosKardex[x].cantidadIngresada;
-		}else{
-			total -= datosKardex[x].cantidadSacada;
-		}
-	}
-	return total;
-};
+}
 
 
 //Listeners
@@ -140,20 +314,13 @@ formularioOperaciones.onsubmit = function(e){
 			if(validar.entero(e.target[2].value)){
 				if(e.target[1].value === "salida" || validar.flotante(e.target[3].value)){
 					if(e.target[1].value === "entrada"){
-						agregarEntrada(e.target[0].value,e.target[2].value,e.target[3].value,e.target[4].value,e.target[5].value);
+						registrar.entrada(e.target[0].value,e.target[2].value,e.target[3].value,e.target[4].value,e.target[5].value);
 						vaciarFormulario();
-						mostrarMensajeNuevaENtradaKardex("Nueva entrada registrada en Kardex");
-						console.log(datosSalidas);
+						mostrarMensajeNuevaEntradaKardex("Nueva entrada registrada en Kardex");
+						console.log(datosKardex);
 					}else{
-						if(parseInt(e.target[2].value) <= stockTotal){
-							agregarSalida(e.target[0].value,e.target[2].value,e.target[4].value,e.target[5].value);
-							vaciarFormulario();
-							mostrarMensajeNuevaENtradaKardex("Nueva salida registrada a Kardex");
-							console.log(datosSalidas);
-						}else{
-							e.target[2].focus();
-							swal("Error!","Stock insuficiente para cumplir con esta salida","error");
-						}
+						registrar.salida(e.target[0].value,e.target[2].value,e.target[4].value,e.target[5].value);
+						
 					}
 					vaciarFormulario();
 				}else{
@@ -182,20 +349,3 @@ document.getElementById("tipoEspecie").onchange = function(a){
 		divCostoUnitario.classList.add('oculto');
 	}
 }
-/*
-var str = "<tr>";
-			str += "<td>"+datosKardex[i].fecha+"</td>";//Fecha
-			str += "<td>"+datosKardex[i].comprobante+"</td>";//Comprobante opcional
-			str += "<td>"+datosKardex[i].persona+"</td>";//Cliente o proveedor
-			str += "<td>-</td>";//Especie - Entrada
-			str += "<td>"+datosKardex[i].cantidad+"</td>";//Especie - Salida
-			str += "<td>"+calcularExistenciasHasta(i)+"</td>";//Especie - Existencia
-			str += "<td>-</td>";//Precio - Compra
-			var pSalida = calcularSaldoHasta(i)/calcularExistenciasHasta(i);
-			str += "<td"+pSalida+"</td>";//Precio - Salida
-			str += "<td>-</td>";//Valores - Debe
-			str += "<td>"+pSalida*datosKardex[i].cantidad+"</td>";//Valores - Haber
-			str += "<td>"+calcularSaldoHasta(i)+"</td>";//Valores - Saldo
-			str += "<td class=\"colUsr\"><a href=\"#\" class=\"btnUsr\" data-accion=\"editar\" data-codigo=\"\" title=\"Editar esta fila\"><i class=\"fa fa-pencil\"></i></a><a href=\"#\" class=\"btnUsr\" data-accion=\"eliminar\" data-codigo=\"\" title=\"Eliminar esta fila\"><i class=\"fa fa-trash-o\"></i></a></td>";//Opciones de usuario
-			str += "</tr>";
-*/
